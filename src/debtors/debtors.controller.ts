@@ -1,34 +1,42 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { DebtorsService } from './debtors.service';
 import { CreateDebtorDto } from './dto/create-debtor.dto';
 import { UpdateDebtorDto } from './dto/update-debtor.dto';
+import { Debtor } from './entities/debtor.entity';
 
-@Controller('debtors')
+@Controller('debtors') // Ruta base
 export class DebtorsController {
   constructor(private readonly debtorsService: DebtorsService) {}
 
-  @Post()
-  create(@Body() createDebtorDto: CreateDebtorDto) {
-    return this.debtorsService.create(createDebtorDto);
+  @Get(':id') // GET /debtors/:id -> obtener un deudor por ID
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Debtor> {
+    return await this.debtorsService.findOne(id);
   }
 
-  @Get()
-  findAll() {
-    return this.debtorsService.findAll();
+  @Post() // POST /debtors -> crear
+  async create(@Body() createDebtorDto: CreateDebtorDto): Promise<Debtor> {
+    return await this.debtorsService.create(createDebtorDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.debtorsService.findOne(+id);
+  @Patch(':id') // PATCH /debtors/:id -> actualizar
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateDebtorDto: UpdateDebtorDto,
+  ): Promise<Debtor> {
+    return await this.debtorsService.update(id, updateDebtorDto);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDebtorDto: UpdateDebtorDto) {
-    return this.debtorsService.update(+id, updateDebtorDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.debtorsService.remove(+id);
+  // Endpoint para búsqueda con paginación
+  @Get('search') // GET /debtors/search -> búsqueda con paginación
+  async findAllPaginated(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+    @Query('search') search: string = '',
+  ) {
+    return await this.debtorsService.findAllPaginated(
+      Number(page),
+      Number(limit),
+      search,
+    );
   }
 }
