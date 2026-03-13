@@ -1,42 +1,72 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('debtors')
 export class Debtor {
-
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  companyName: string; // nombre-deudor-empresa
+  companyName: string;
 
   @Column({ unique: true })
-  cif: string; // CIF-deudor
+  cif: string;
 
-  @Column('decimal', { precision: 10, scale: 2 }) //precision: total de dígitos, scale: dígitos decimales
-  debtLimit: number; // limite de deuda
-
-  @Column()
-  email: string; // Email_deudor
+  @Column('decimal', { precision: 10, scale: 2 })
+  debtLimit: number;
 
   @Column()
-  registrationDate: string; // Fecha_alta_deudor
+  email: string;
+
+  @Column({ type: 'date' })
+  registrationDate: Date;
 
   @Column()
-  contactPerson: string; // contacto-deudor
+  contactPerson: string;
 
   @Column()
-  phone: string; // telefono-deudor
+  phone: string;
 
   @Column({ nullable: true })
-  mobile: string; // movil-deudor
+  mobile: string;
 
   @Column({
     type: 'enum',
     enum: ['EUR', 'USD', 'GBP'],
     default: 'EUR',
   })
-  currency: string; // moneda actual del deudor
+  currency: string;
 
-  @Column({ type: 'text', nullable: true }) // el texto puede ser nulo, es decir, no obligatorio
-  observations: string; // Observaciones-deudor
+  @Column({ type: 'text', nullable: true })
+  observations: string;
+
+  @Column({
+    type: 'enum',
+    enum: ['ES', 'UK', 'US'],
+    default: 'ES',
+  })
+  country: string;
+
+  // IDs de usuario (sin relación porque está en otro microservicio)
+  @Column()
+  ownerUserId: string;
+
+  @Column()
+  createdByUserId: string;
+
+  @Column({ nullable: true })
+  updatedByUserId: string;
+
+  // Fechas automáticas
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
 }
+
