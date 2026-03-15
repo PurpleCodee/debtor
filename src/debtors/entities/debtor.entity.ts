@@ -47,7 +47,7 @@ export class Debtor {
 
   @Column({
     type: 'enum',
-    enum: ['ES', 'UK', 'US'],
+    enum: ['ES', 'FR', 'DE', 'IT', 'PT', 'UK', 'US'],
     default: 'ES',
   })
   country: string;
@@ -69,4 +69,3 @@ export class Debtor {
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 }
-

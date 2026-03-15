@@ -72,9 +72,6 @@ export class CreateDebtorDto {
   })
   mobile?: string;
 
-  @IsEnum(Currency)
-  currency: Currency;
-
   @IsOptional()
   @IsString()
   @Length(0, 500)

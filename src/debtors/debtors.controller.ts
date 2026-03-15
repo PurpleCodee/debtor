@@ -1,7 +1,16 @@
-import { Controller, Get, Post, Patch, Body, Param, ParseIntPipe, Query } from '@nestjs/common';
-import { DebtorsService } from './debtors.service';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CreateDebtorDto } from './dto/create-debtor.dto';
 import { UpdateDebtorDto } from './dto/update-debtor.dto';
+import { DebtorsService } from './debtors.service';
 import { Debtor } from './entities/debtor.entity';
 
 @Controller('debtors')
@@ -14,12 +23,16 @@ export class DebtorsController {
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
     @Query('search') search: string = '',
+    @Query('order_param') orderParam: string = 'companyName',
+    @Query('order_type') orderType: string = 'DESC',
   ) {
     return await this.debtorsService.findAllPaginated(
       userId,
       Number(page),
       Number(limit),
       search,
+      orderParam,
+      orderType,
     );
   }
 
